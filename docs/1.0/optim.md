@@ -2,23 +2,23 @@
 
 # torch.optim
 
-[`torch.optim`](#module-torch.optim "torch.optim") is a package implementing various optimization algorithms. Most commonly used methods are already supported, and the interface is general enough, so that more sophisticated ones can be also easily integrated in the future.
+[`torch.optim`](#module-torch.optim "torch.optim") 是一个优化器的集合包。目前绝大多数常用的优化器在这个包都已经被实现，并且由于接口有很强的适用性很强，更加复杂的优化器可以很方便的被套用出来。
 
-## How to use an optimizer
+## 如何使用优化器？
 
-To use [`torch.optim`](#module-torch.optim "torch.optim") you have to construct an optimizer object, that will hold the current state and will update the parameters based on the computed gradients.
+想要使用优化器 [`torch.optim`](#module-torch.optim "torch.optim")，首先要构建一个优化器对象。它能保存当前参数的状态并且根据计算出的梯度更新参数。
 
-### Constructing it
+### 构建优化器
 
-To construct an [`Optimizer`](#torch.optim.Optimizer "torch.optim.Optimizer") you have to give it an iterable containing the parameters (all should be `Variable` s) to optimize. Then, you can specify optimizer-specific options such as the learning rate, weight decay, etc.
+想要构建一个优化器 [`Optimizer`](#torch.optim.Optimizer "torch.optim.Optimizer") ，首先要给它一个包含参数的迭代器去优化（所有参数都必须是`Variable`类型）。然后你可以指定一些优化参数，例如学习速率、权重衰减等。
 
-Note
+注意
 
-If you need to move a model to GPU via `.cuda()`, please do so before constructing optimizers for it. Parameters of a model after `.cuda()` will be different objects with those before the call.
+如果你想通过方法 `.cuda()` 使一个模型的参数存储在GPU，那么该操作必须在对于该模型构建优化器之前。因为在调用方法`.cuda()`之后，该模型的所有参数都将被更新且新的参数与旧参数将看作是不同的两组参数。
 
-In general, you should make sure that optimized parameters live in consistent locations when optimizers are constructed and used.
+一般来说，在优化器被构建和使用的过程中，需要保证被优化的参数在内存中或显存中的地址是不变的。
 
-Example:
+例子：
 
 ```py
 optimizer = optim.SGD(model.parameters(), lr = 0.01, momentum=0.9)
@@ -26,11 +26,12 @@ optimizer = optim.Adam([var1, var2], lr = 0.0001)
 
 ```
 
-### Per-parameter options
+### 为多个优化变量指定不同参数
 
-[`Optimizer`](#torch.optim.Optimizer "torch.optim.Optimizer") s also support specifying per-parameter options. To do this, instead of passing an iterable of `Variable` s, pass in an iterable of [`dict`](https://docs.python.org/3/library/stdtypes.html#dict "(in Python v3.7)") s. Each of them will define a separate parameter group, and should contain a `params` key, containing a list of parameters belonging to it. Other keys should match the keyword arguments accepted by the optimizers, and will be used as optimization options for this group.
+当传入参数为一组字典[`dict`](https://docs.python.org/3/library/stdtypes.html#dict "(in Python v3.7)")时，表示优化器[`Optimizer`](#torch.optim.Optimizer "torch.optim.Optimizer") 为多组待优化的变量指定不同的优化参数。每个字典中必须包含键`params`，其他值是优化器对`params`指定的变量优化时使用的参数。
 
-Note
+
+注意
 
 You can still pass options as keyword arguments. They will be used as defaults, in the groups that didn’t override them. This is useful when you only want to vary a single option, while keeping all others consistent between parameter groups.
 
@@ -44,17 +45,17 @@ optim.SGD([
 
 ```
 
-This means that `model.base`’s parameters will use the default learning rate of `1e-2`, `model.classifier`’s parameters will use a learning rate of `1e-3`, and a momentum of `0.9` will be used for all parameters
+其中`model.base` 中的变量在被优化时，其学习速率为默认的`1e-2`, 而在优化`model.classifier`中的参数时，其学习速率为`1e-3`，且动量为0.9。
 
 ### Taking an optimization step
 
-All optimizers implement a [`step()`](#torch.optim.Optimizer.step "torch.optim.Optimizer.step") method, that updates the parameters. It can be used in two ways:
+所有的优化器都实现了一个参数更新方法[`step()`](#torch.optim.Optimizer.step "torch.optim.Optimizer.step")。该方法有两种使用方式：
 
 #### `optimizer.step()`
 
-This is a simplified version supported by most optimizers. The function can be called once the gradients are computed using e.g. `backward()`.
+这是一种被大多数优化器支持的简便使用方法。在梯度被计算`backward()`完成之后，该方法才可以被调用。
 
-Example:
+例子：
 
 ```py
 for input, target in dataset:
@@ -68,9 +69,9 @@ for input, target in dataset:
 
 #### `optimizer.step(closure)`
 
-Some optimization algorithms such as Conjugate Gradient and LBFGS need to reevaluate the function multiple times, so you have to pass in a closure that allows them to recompute your model. The closure should clear the gradients, compute the loss, and return it.
+有些优化器例如共轭梯度算法和LBFGS等算法在计算的过程中需要多次更新算法的状态。所以你需要传入一个函数，让优化器在合适的时候自动去调用传入的方法。传入的方法一般需要将梯度清空，计算损失函数且能返回误差。
 
-Example:
+例子：
 
 ```py
 for input, target in dataset:
@@ -90,7 +91,7 @@ for input, target in dataset:
 class torch.optim.Optimizer(params, defaults)
 ```
 
-Base class for all optimizers.
+该类是所有优化器的基类。
 
 Warning
 

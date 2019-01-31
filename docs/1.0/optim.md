@@ -93,14 +93,15 @@ class torch.optim.Optimizer(params, defaults)
 
 该类是所有优化器的基类。
 
-Warning
+警告
 
-Parameters need to be specified as collections that have a deterministic ordering that is consistent between runs. Examples of objects that don’t satisfy those properties are sets and iterators over values of dictionaries.
+优化器中传入的变量集合必须是稳定的（每次遍历该集合时，输出的元素顺序必须一致）。一些常见的集合类型例如set和dic类型就不符合要求。
 
-| Parameters: | 
+| 参数： | 
 
-*   **params** (_iterable_) – an iterable of [`torch.Tensor`](tensors.html#torch.Tensor "torch.Tensor") s or [`dict`](https://docs.python.org/3/library/stdtypes.html#dict "(in Python v3.7)") s. Specifies what Tensors should be optimized.
-*   **defaults** – (dict): a dict containing default values of optimization options (used when a parameter group doesn’t specify them).
+*   **params** (_iterable_) – 一个张量 [`torch.Tensor`](tensors.html#torch.Tensor "torch.Tensor") 的集合或者一个字典 [`dict`](https://docs.python.org/3/library/stdtypes.html#dict "(in Python v3.7)") 的集合，这个集合指定了需要被优化器优化的变量。
+*   **defaults** – (dict): 一个指定优化参数的字典类型。
+
 
  |
 | --- | --- |
@@ -158,23 +159,20 @@ Performs a single optimization step (parameter update).
 zero_grad()
 ```
 
-Clears the gradients of all optimized [`torch.Tensor`](tensors.html#torch.Tensor "torch.Tensor") s.
+清空所有张量[`torch.Tensor`](tensors.html#torch.Tensor "torch.Tensor")的梯度。
 
 ```py
 class torch.optim.Adadelta(params, lr=1.0, rho=0.9, eps=1e-06, weight_decay=0)
 ```
+实现 [ADADELTA: An Adaptive Learning Rate Method](https://arxiv.org/abs/1212.5701)优化算法。
 
-Implements Adadelta algorithm.
+| 参数： | 
 
-It has been proposed in [ADADELTA: An Adaptive Learning Rate Method](https://arxiv.org/abs/1212.5701).
-
-| Parameters: | 
-
-*   **params** (_iterable_) – iterable of parameters to optimize or dicts defining parameter groups
-*   **rho** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – coefficient used for computing a running average of squared gradients (default: 0.9)
-*   **eps** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – term added to the denominator to improve numerical stability (default: 1e-6)
-*   **lr** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – coefficient that scale delta before it is applied to the parameters (default: 1.0)
-*   **weight_decay** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – weight decay (L2 penalty) (default: 0)
+*   **params** (_iterable_) – 一个可遍历的张量集合或者一个包含张量和优化参数的字典集合
+*   **rho** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – 用于计算平方梯度运行平均值的系数（默认为0.9）
+*   **eps** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – 在除法计算时为了防止数字过小添加到分母上的平滑项（默认为1e-6）
+*   **lr** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – 学习速率（默认为1.0）
+*   **weight_decay** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – 权重惩罚参数（L2正则参数）（默认为0）
 
  |
 | --- | --- |
@@ -183,18 +181,15 @@ It has been proposed in [ADADELTA: An Adaptive Learning Rate Method](https://arx
 step(closure=None)
 ```
 
-Performs a single optimization step.
+执行一次参数更新操作。
 
-| Parameters: | **closure** (_callable__,_ _optional_) – A closure that reevaluates the model and returns the loss. |
+| Parameters: | **closure** (_callable__,_ _optional_) – 一个可以更新模型中张量大小并且返回误差的回调函数。 |
 | --- | --- |
 
 ```py
 class torch.optim.Adagrad(params, lr=0.01, lr_decay=0, weight_decay=0, initial_accumulator_value=0)
 ```
-
-Implements Adagrad algorithm.
-
-It has been proposed in [Adaptive Subgradient Methods for Online Learning and Stochastic Optimization](http://jmlr.org/papers/v12/duchi11a.html).
+实例化一个[Adaptive Subgradient Methods for Online Learning and Stochastic Optimization](http://jmlr.org/papers/v12/duchi11a.html)优化器。
 
 | Parameters: | 
 

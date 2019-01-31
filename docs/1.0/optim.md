@@ -2,21 +2,21 @@
 
 # torch.optim
 
-[`torch.optim`](#module-torch.optim "torch.optim") 是一个优化器的集合包。目前绝大多数常用的优化器在这个包都已经被实现，并且由于接口有很强的适用性很强，更加复杂的优化器可以很方便的被套用出来。
+[`torch.optim`](#module-torch.optim "torch.optim") 是一个实现了目前大多数常用优化器的大礼包。并且由于提供的接口有很强的适用性，套用已有的接口，可以方便实现更加复杂的优化器。
 
 ## 如何使用优化器？
 
-想要使用优化器 [`torch.optim`](#module-torch.optim "torch.optim")，首先要构建一个优化器对象。它能保存当前参数的状态并且根据计算出的梯度更新参数。
+想要使用优化器 [`torch.optim`](#module-torch.optim "torch.optim")，首先要实例化一个优化器对象。它能保存当前张量的值并且根据梯度更新该张量。
 
 ### 构建优化器
 
-想要构建一个优化器 [`Optimizer`](#torch.optim.Optimizer "torch.optim.Optimizer") ，首先要给它一个包含参数的迭代器去优化（所有参数都必须是`Variable`类型）。然后你可以指定一些优化参数，例如学习速率、权重衰减等。
+构建优化器 [`Optimizer`](#torch.optim.Optimizer "torch.optim.Optimizer") ，需要指定被优化的张量 `Variable`的集合。然后你可以指定一些优化参数，例如学习速率、权重衰减等。
 
 注意
 
-如果你想通过方法 `.cuda()` 使一个模型的参数存储在GPU，那么该操作必须在对于该模型构建优化器之前。因为在调用方法`.cuda()`之后，该模型的所有参数都将被更新且新的参数与旧参数将看作是不同的两组参数。
+如果你想通过方法 `.cuda()` 使一个模型的张量存储在GPU，那么该操作必须在优化器被实例化之前完成。因为在调用方法`.cuda()`之后，该模型的所有张量都将被更新且旧的张量将与优化器无关。
 
-一般来说，在优化器被构建和使用的过程中，需要保证被优化的参数在内存中或显存中的地址是不变的。
+一般来说，在优化器被构建和使用的过程中，需要保证被优化张量在内存中或显存中的地址是不变的。
 
 例子：
 
@@ -26,17 +26,14 @@ optimizer = optim.Adam([var1, var2], lr = 0.0001)
 
 ```
 
-### 为多个优化变量指定不同参数
+### 为多组张量指定不同的参数
 
-当传入参数为一组字典[`dict`](https://docs.python.org/3/library/stdtypes.html#dict "(in Python v3.7)")时，表示优化器[`Optimizer`](#torch.optim.Optimizer "torch.optim.Optimizer") 为多组待优化的变量指定不同的优化参数。每个字典中必须包含键`params`，其他值是优化器对`params`指定的变量优化时使用的参数。
+当传入参数为一组字典[`dict`](https://docs.python.org/3/library/stdtypes.html#dict "(in Python v3.7)")时，表示优化器[`Optimizer`](#torch.optim.Optimizer "torch.optim.Optimizer") 为多组张量指定不同的优化参数。每个字典中必须包含键`params`，其他值是该优化器对`params`指定的张量被优化时所遵循的参数。
 
 
 注意
 
-You can still pass options as keyword arguments. They will be used as defaults, in the groups that didn’t override them. This is useful when you only want to vary a single option, while keeping all others consistent between parameter groups.
-
-For example, this is very useful when one wants to specify per-layer learning rates:
-
+在给优化器传入参数时，如果想给多组待优化的张量指定相同的参数，可以将该参数写在张量参数dic数组的外面。如果dic又指定了该参数，则该参数会被复写。例如，如果过想给多组被优化的张量指定相同个的学习速率时：
 ```py
 optim.SGD([
                 {'params': model.base.parameters()},
@@ -45,11 +42,11 @@ optim.SGD([
 
 ```
 
-其中`model.base` 中的变量在被优化时，其学习速率为默认的`1e-2`, 而在优化`model.classifier`中的参数时，其学习速率为`1e-3`，且动量为0.9。
+其中`model.base` 的学习速率为外侧的`1e-2`, 而`model.classifier`中的学习速率为`1e-3`，且动量为0.9。
 
-### Taking an optimization step
+### 执行一次优化操作
 
-所有的优化器都实现了一个参数更新方法[`step()`](#torch.optim.Optimizer.step "torch.optim.Optimizer.step")。该方法有两种使用方式：
+所有的优化器都实现了一个张量更新方法[`step()`](#torch.optim.Optimizer.step "torch.optim.Optimizer.step")。该方法有两种使用方式：
 
 #### `optimizer.step()`
 
@@ -126,7 +123,7 @@ This can be useful when fine tuning a pre-trained network as frozen layers can b
 load_state_dict(state_dict)
 ```
 
-Loads the optimizer state.
+获取一个优化器当前的状态。
 
 | Parameters: | **state_dict** ([_dict_](https://docs.python.org/3/library/stdtypes.html#dict "(in Python v3.7)")) – optimizer state. Should be an object returned from a call to [`state_dict()`](#torch.optim.Optimizer.state_dict "torch.optim.Optimizer.state_dict"). |
 | --- | --- |
@@ -134,25 +131,22 @@ Loads the optimizer state.
 ```py
 state_dict()
 ```
-
-Returns the state of the optimizer as a [`dict`](https://docs.python.org/3/library/stdtypes.html#dict "(in Python v3.7)").
-
-It contains two entries:
+返回当前优化器的状态，该返回值为字典类型[`dict`](https://docs.python.org/3/library/stdtypes.html#dict "(in Python v3.7)")。
+它包含两个部分：
 
 *   ```py
-    state - a dict holding current optimization state. Its content
+    state - 包含当前优化器状态的字典
     ```
 
     differs between optimizer classes.
-*   param_groups - a dict containing all parameter groups
+*   param_groups - 一个包含所有参数集合的字典
 
 ```py
 step(closure)
 ```
+执行一次优化过程（将待优化的张量更新一次）
 
-Performs a single optimization step (parameter update).
-
-| Parameters: | **closure** (_callable_) – A closure that reevaluates the model and returns the loss. Optional for most optimizers. |
+| Parameters: | **closure** (_callable_) – 一个可以更新模型中张量大小并且返回误差的回调函数。 |
 | --- | --- |
 
 ```py

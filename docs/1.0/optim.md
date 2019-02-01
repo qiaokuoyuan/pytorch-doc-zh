@@ -10,11 +10,11 @@
 
 ### 构建优化器
 
-构建优化器 [`Optimizer`](#torch.optim.Optimizer "torch.optim.Optimizer") ，需要指定被优化的张量 `Variable`的集合。然后你可以指定一些优化参数，例如学习速率、权重衰减等。
+构建优化器 [`Optimizer`](#torch.optim.Optimizer "torch.optim.Optimizer") 之前，需要指定被优化的张量 `Variable`。同时你可以指定一些参数，例如学习速率、权重衰减等。
 
 注意
 
-如果你想通过方法 `.cuda()` 使一个模型的张量存储在GPU，那么该操作必须在优化器被实例化之前完成。因为在调用方法`.cuda()`之后，该模型的所有张量都将被更新且旧的张量将与优化器无关。
+如果你想通过方法 `.cuda()` 将一个模型的张量存储在GPU，那么该操作必须在优化器被实例化之前。因为在调用方法`.cuda()`之后，该模型的所有张量都将被更新且旧的张量将与优化器无关。
 
 一般来说，在优化器被构建和使用的过程中，需要保证被优化张量在内存中或显存中的地址是不变的。
 
@@ -28,12 +28,11 @@ optimizer = optim.Adam([var1, var2], lr = 0.0001)
 
 ### 为多组张量指定不同的参数
 
-当传入参数为一组字典[`dict`](https://docs.python.org/3/library/stdtypes.html#dict "(in Python v3.7)")时，表示优化器[`Optimizer`](#torch.optim.Optimizer "torch.optim.Optimizer") 为多组张量指定不同的优化参数。每个字典中必须包含键`params`，其他值是该优化器对`params`指定的张量被优化时所遵循的参数。
-
+当传入参数为一组字典[`dict`](https://docs.python.org/3/library/stdtypes.html#dict "(in Python v3.7)")时，表示优化器[`Optimizer`](#torch.optim.Optimizer "torch.optim.Optimizer") 为多组张量指定不同的优化参数。每个字典中必须包含键`params`来指定被优化的张量，其他参数表示`params`指定的张量在优化时遵循的参数。
 
 注意
 
-在给优化器传入参数时，如果想给多组待优化的张量指定相同的参数，可以将该参数写在张量参数dic数组的外面。如果dic又指定了该参数，则该参数会被复写。例如，如果过想给多组被优化的张量指定相同个的学习速率时：
+在给优化器传入参数时，如果想给多组张量指定相同的参数，可以直接将该参数写在张量参数dic数组的外面。如果dic又指定了该参数，则该参数会被复写。例如，如果想给多组被优化的张量指定相同的学习速率时：
 ```py
 optim.SGD([
                 {'params': model.base.parameters()},
@@ -50,7 +49,7 @@ optim.SGD([
 
 #### `optimizer.step()`
 
-这是一种被大多数优化器支持的简便使用方法。在梯度被计算`backward()`完成之后，该方法才可以被调用。
+这是一种被大多数优化器支持的简便使用方法。在梯度被计算`backward()`完成之后，该方法就可以被调用并且完成一次张量更新。
 
 例子：
 
@@ -66,7 +65,7 @@ for input, target in dataset:
 
 #### `optimizer.step(closure)`
 
-有些优化器例如共轭梯度算法和LBFGS等算法在计算的过程中需要多次更新算法的状态。所以你需要传入一个函数，让优化器在合适的时候自动去调用传入的方法。传入的方法一般需要将梯度清空，计算损失函数且能返回误差。
+有些优化器例如共轭梯度优化器和LBFGS优化器等在计算的过程中需要多次更新优化器的状态，也就是说我们无法在某一时刻指定优化器何时进行张量更新。所以你需要传入一个函数，让优化器在合适的时候自动去调用该函数来完成张量更新。传入的函数中至少有包含两个操作：梯度清空、计算误差并返回。
 
 例子：
 
@@ -82,7 +81,7 @@ for input, target in dataset:
 
 ```
 
-## Algorithms
+## 算法
 
 ```py
 class torch.optim.Optimizer(params, defaults)
@@ -92,12 +91,12 @@ class torch.optim.Optimizer(params, defaults)
 
 警告
 
-优化器中传入的变量集合必须是稳定的（每次遍历该集合时，输出的元素顺序必须一致）。一些常见的集合类型例如set和dic类型就不符合要求。
+优化器中传入的变量集合必须是稳定的（每次遍历该集合时，输出的元素顺序必须一致）。而一些常见的集合类型例如set和dic类型就不符合要求。
 
 | 参数： | 
 
 *   **params** (_iterable_) – 一个张量 [`torch.Tensor`](tensors.html#torch.Tensor "torch.Tensor") 的集合或者一个字典 [`dict`](https://docs.python.org/3/library/stdtypes.html#dict "(in Python v3.7)") 的集合，这个集合指定了需要被优化器优化的变量。
-*   **defaults** – (dict): 一个指定优化参数的字典类型。
+*   **defaults** – (dict): 一个指定优化参数的字典。
 
 
  |
@@ -107,14 +106,14 @@ class torch.optim.Optimizer(params, defaults)
 add_param_group(param_group)
 ```
 
-Add a param group to the [`Optimizer`](#torch.optim.Optimizer "torch.optim.Optimizer") s `param_groups`.
+将一组张量手动的添加到优化器[`Optimizer`](#torch.optim.Optimizer "torch.optim.Optimizer")的 `param_groups`中。
 
-This can be useful when fine tuning a pre-trained network as frozen layers can be made trainable and added to the [`Optimizer`](#torch.optim.Optimizer "torch.optim.Optimizer") as training progresses.
+由于在优化器实例化时，需要指定哪些张量被优化。而在优化器被实例化后，可以通过调用方法`add_param_group`将一组张量添加到优化器中。该方法在对已有模型微调时很有用。
 
 | Parameters: | 
 
-*   **param_group** ([_dict_](https://docs.python.org/3/library/stdtypes.html#dict "(in Python v3.7)")) – Specifies what Tensors should be optimized along with group
-*   **optimization options.** (_specific_) –
+*   **param_group** ([_dict_](https://docs.python.org/3/library/stdtypes.html#dict "(in Python v3.7)")) – 指定需要被添加到优化器中的张量
+*   **optimization options.** (_specific_) – 被添加张量在优化时的参数（学习速率等）
 
  |
 | --- | --- |
@@ -125,7 +124,7 @@ load_state_dict(state_dict)
 
 获取一个优化器当前的状态。
 
-| Parameters: | **state_dict** ([_dict_](https://docs.python.org/3/library/stdtypes.html#dict "(in Python v3.7)")) – optimizer state. Should be an object returned from a call to [`state_dict()`](#torch.optim.Optimizer.state_dict "torch.optim.Optimizer.state_dict"). |
+| Parameters: | **state_dict** ([_dict_](https://docs.python.org/3/library/stdtypes.html#dict "(in Python v3.7)")) – 当前优化器的状态，其返回值与调用 [`state_dict()`](#torch.optim.Optimizer.state_dict "torch.optim.Optimizer.state_dict")一样。|
 | --- | --- |
 
 ```py
@@ -404,7 +403,7 @@ class torch.optim.SGD(params, lr=<required parameter>, momentum=0, dampening=0, 
 *   **momentum** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – 动量（默认为0）
 *   **weight_decay** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – L2正则项（默认为0）
 *   **dampening** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – 动量控制项（默认为0）
-*   **nesterov** ([_bool_](https://docs.python.org/3/library/functions.html#bool "(in Python v3.7)")_,_ _optional_) – 是否启用Nesterov momentum动量（默认不启用）
+*   **nesterov** ([_bool_](https://docs.python.org/3/library/functions.html#bool "(in Python v3.7)")_,_ _optional_) – 是否启用Nesterov动量（默认不启用）
 
  |
 | --- | --- |
@@ -422,45 +421,37 @@ Example
 
 注意
 
-The implementation of SGD with Momentum/Nesterov subtly differs from Sutskever et. al. and implementations in some other frameworks.
-
-Considering the specific case of Momentum, the update can be written as
-
+Nesterov 动量更新张量的计算公式与其他的动量计算公式少有不同，区别在于：
 ![](img/2f90cce3dc946e821ab9d2ae2dfe32c8.jpg)
 
-where p, g, v and ![](img/787a6ae8db26f884126803d73bf4d66c.jpg) denote the parameters, gradient, velocity, and momentum respectively.
-
-This is in contrast to Sutskever et. al. and other frameworks which employ an update of the form
+图中就是一般的参数更新公式，其中p、g、v和ρ分别代表张量、梯度、速度和动量。而在Nesterov动量公式中，张量更新的方式是这样的：
 
 ![](img/63bd0746ed6acdf5617d079c80bcfbce.jpg)
 
-The Nesterov version is analogously modified.
 
 ```py
 step(closure=None)
 ```
 
-Performs a single optimization step.
 
-| Parameters: | **closure** (_callable__,_ _optional_) – A closure that reevaluates the model and returns the loss. |
+命令优化器执行一次张量更新操作。
+
+| Parameters: | **closure** (_callable__,_ _optional_) – 一个可以更新模型中张量大小并且返回误差的回调函数。 |
 | --- | --- |
 
 ## 如何调整学习速率
 
-`torch.optim.lr_scheduler` provides several methods to adjust the learning rate based on the number of epochs. [`torch.optim.lr_scheduler.ReduceLROnPlateau`](#torch.optim.lr_scheduler.ReduceLROnPlateau "torch.optim.lr_scheduler.ReduceLROnPlateau") allows dynamic learning rate reducing based on some validation measurements.
 `torch.optim.lr_scheduler` 提供了一系列方法可以根据学习的轮数调整学习速率。 [`torch.optim.lr_scheduler.ReduceLROnPlateau`](#torch.optim.lr_scheduler.ReduceLROnPlateau "torch.optim.lr_scheduler.ReduceLROnPlateau") 允许我们通过验证模型参数动态的修改学习速率的大小。
 
 ```py
 class torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda, last_epoch=-1)
 ```
-
-Sets the learning rate of each parameter group to the initial lr times a given function. When last_epoch=-1, sets initial lr as lr.
-
+将优化器的学习速率设置为初始学习速率与给定函数的乘积，当参数`last_epoch`=-1时，将初始学习速率设置为当前学习速率。
 | Parameters: | 
 
-*   **optimizer** ([_Optimizer_](#torch.optim.Optimizer "torch.optim.Optimizer")) – Wrapped optimizer.
+*   **optimizer** ([_Optimizer_](#torch.optim.Optimizer "torch.optim.Optimizer")) – 被调整的优化器。
 *   **lr_lambda** (_function_ _or_ [_list_](https://docs.python.org/3/library/stdtypes.html#list "(in Python v3.7)")) – A function which computes a multiplicative factor given an integer parameter epoch, or a list of such functions, one for each group in optimizer.param_groups.
-*   **last_epoch** ([_int_](https://docs.python.org/3/library/functions.html#int "(in Python v3.7)")) – The index of last epoch. Default: -1.
+*   **last_epoch** ([_int_](https://docs.python.org/3/library/functions.html#int "(in Python v3.7)")) – 上一次The index of last epoch. Default: -1.
 
  |
 | --- | --- |
@@ -600,20 +591,21 @@ It has been proposed in [SGDR: Stochastic Gradient Descent with Warm Restarts](h
 class torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=10, verbose=False, threshold=0.0001, threshold_mode='rel', cooldown=0, min_lr=0, eps=1e-08)
 ```
 
-Reduce learning rate when a metric has stopped improving. Models often benefit from reducing the learning rate by a factor of 2-10 once learning stagnates. This scheduler reads a metrics quantity and if no improvement is seen for a ‘patience’ number of epochs, the learning rate is reduced.
+当优化器的损失函数无法进一步缩小时，降低学习速率。对于许多模型来说，一旦损失函数在学习了2-10个循环后仍无法降低，降低学习速率通常能改善该情况。该方法会观察优化器在学习过程中损失函数的大小，如果在经过了`patience`个循环后，损失依旧无法江都，该方法会降低学习速率。
+
 
 | Parameters: | 
 
-*   **optimizer** ([_Optimizer_](#torch.optim.Optimizer "torch.optim.Optimizer")) – Wrapped optimizer.
-*   **mode** ([_str_](https://docs.python.org/3/library/stdtypes.html#str "(in Python v3.7)")) – One of `min`, `max`. In `min` mode, lr will be reduced when the quantity monitored has stopped decreasing; in `max` mode it will be reduced when the quantity monitored has stopped increasing. Default: ‘min’.
-*   **factor** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")) – Factor by which the learning rate will be reduced. new_lr = lr * factor. Default: 0.1.
-*   **patience** ([_int_](https://docs.python.org/3/library/functions.html#int "(in Python v3.7)")) – Number of epochs with no improvement after which learning rate will be reduced. For example, if `patience = 2`, then we will ignore the first 2 epochs with no improvement, and will only decrease the LR after the 3rd epoch if the loss still hasn’t improved then. Default: 10.
-*   **verbose** ([_bool_](https://docs.python.org/3/library/functions.html#bool "(in Python v3.7)")) – If `True`, prints a message to stdout for each update. Default: `False`.
-*   **threshold** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")) – Threshold for measuring the new optimum, to only focus on significant changes. Default: 1e-4.
+*   **optimizer** ([_Optimizer_](#torch.optim.Optimizer "torch.optim.Optimizer")) – 被观察的优化器。
+*   **mode** ([_str_](https://docs.python.org/3/library/stdtypes.html#str "(in Python v3.7)")) – `min`或者 `max`，如果是`min`标识当损失无法继续减小时，降低学习速率。而`max`标识当损失无法继续增大时，改变学习速率。默认为 `min`。
+*   **factor** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")) – 当学习速率需要降低时，降低的比例。默认为0.1。
+*   **patience** ([_int_](https://docs.python.org/3/library/functions.html#int "(in Python v3.7)")) – 降低学习速率前最少学习多少个循环。例如当`patience = 2`时，前两次循环不会降低学习速率。默认为10。
+*   **verbose** ([_bool_](https://docs.python.org/3/library/functions.html#bool "(in Python v3.7)")) – 如果是 `True` 则当张量更新时，将更新信息输入。默认为`False`（不输出）。
+*   **threshold** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")) – 区分损函数是否继续改变的阈值，如果损失函数的变化低于这个阈值，则认为损失函数处于“平原”区，考虑降低学习速率（默认1e-4）。
 *   **threshold_mode** ([_str_](https://docs.python.org/3/library/stdtypes.html#str "(in Python v3.7)")) – One of `rel`, `abs`. In `rel` mode, dynamic_threshold = best * ( 1 + threshold ) in ‘max’ mode or best * ( 1 - threshold ) in `min` mode. In `abs` mode, dynamic_threshold = best + threshold in `max` mode or best - threshold in `min` mode. Default: ‘rel’.
 *   **cooldown** ([_int_](https://docs.python.org/3/library/functions.html#int "(in Python v3.7)")) – Number of epochs to wait before resuming normal operation after lr has been reduced. Default: 0.
-*   **min_lr** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)") _or_ [_list_](https://docs.python.org/3/library/stdtypes.html#list "(in Python v3.7)")) – A scalar or a list of scalars. A lower bound on the learning rate of all param groups or each group respectively. Default: 0.
-*   **eps** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")) – Minimal decay applied to lr. If the difference between new and old lr is smaller than eps, the update is ignored. Default: 1e-8.
+*   **min_lr** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)") _or_ [_list_](https://docs.python.org/3/library/stdtypes.html#list "(in Python v3.7)")) – 一个数字或者一个数组。如果是一个数组，标识传入的每一组张量的最小学习速率。默认为0。
+*   **eps** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")) – 学习速率最小衰减值。如果新的学习速率和旧的学习速率之间的差小于该值，则本次张量更新操作将被忽略。默认为1e-8。
 
  |
 | --- | --- |

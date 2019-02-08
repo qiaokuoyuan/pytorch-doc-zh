@@ -110,7 +110,7 @@ add_param_group(param_group)
 
 由于在优化器实例化时，需要指定哪些张量被优化。而在优化器被实例化后，可以通过调用方法`add_param_group`将一组张量添加到优化器中。该方法在对已有模型微调时很有用。
 
-| Parameters: | 
+| 参数: | 
 
 *   **param_group** ([_dict_](https://docs.python.org/3/library/stdtypes.html#dict "(in Python v3.7)")) – 指定需要被添加到优化器中的张量
 *   **optimization options.** (_specific_) – 被添加张量在优化时的参数（学习速率等）
@@ -145,7 +145,7 @@ step(closure)
 ```
 执行一次优化过程（将待优化的张量更新一次）
 
-| Parameters: | **closure** (_callable_) – 一个可以更新模型中张量大小并且返回误差的回调函数。 |
+| 参数: | **closure** (_callable_) – 一个可以更新模型中张量大小并且返回误差的回调函数。 |
 | --- | --- |
 
 ```py
@@ -176,7 +176,7 @@ step(closure=None)
 
 执行一次参数更新操作。
 
-| Parameters: | **closure** (_callable__,_ _optional_) – 一个可以更新模型中张量大小并且返回误差的回调函数。 |
+| 参数: | **closure** (_callable__,_ _optional_) – 一个可以更新模型中张量大小并且返回误差的回调函数。 |
 | --- | --- |
 
 ```py
@@ -200,7 +200,7 @@ step(closure=None)
 
 执行一次参数更新操作。
 
-| Parameters: | **closure** (_callable__,_ _optional_) – 一个可以更新模型中张量大小并且返回误差的回调函数。 |
+| 参数: | **closure** (_callable__,_ _optional_) – 一个可以更新模型中张量大小并且返回误差的回调函数。 |
 | --- | --- |
 
 ```py
@@ -210,7 +210,7 @@ class torch.optim.Adam(params, lr=0.001, betas=(0.9, 0.999), eps=1e-08, weight_d
 实例化一个 [Adam: A Method for Stochastic Optimization](https://arxiv.org/abs/1412.6980)优化器。
 
 
-| Parameters: | 
+| 参数: | 
 
 *   **params** (_iterable_) – 一个可遍历的张量集合或者一个包含张量和优化参数的字典集合
 *   **lr** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – 学习速率（默认为1e-3）
@@ -228,7 +228,7 @@ step(closure=None)
 
 执行一次参数更新操作。
 
-| Parameters: | **closure** (_callable__,_ _optional_) – 一个可以更新模型中张量大小并且返回误差的回调函数。 |
+| 参数: | **closure** (_callable__,_ _optional_) – 一个可以更新模型中张量大小并且返回误差的回调函数。 |
 | --- | --- |
 
 ```py
@@ -236,7 +236,7 @@ class torch.optim.SparseAdam(params, lr=0.001, betas=(0.9, 0.999), eps=1e-08)
 ```
 实例化一个适用于稀疏张量的Adam优化器。在该算法中，只有权重需要被更新时，只有权重产生变化的那部分张量会被更新到模型参数中。
 
-| Parameters: | 
+| 参数: | 
 
 *   **params** (_iterable_) – 一个可遍历的张量集合或者一个包含张量和优化参数的字典集合
 *   **lr** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – 学习速率（默认为1e-3）
@@ -277,7 +277,7 @@ step(closure=None)
 
 执行一次参数更新操作。
 
-| Parameters: | **closure** (_callable__,_ _optional_) 一个可以更新模型中张量大小并且返回误差的回调函数。 |
+| 参数: | **closure** (_callable__,_ _optional_) 一个可以更新模型中张量大小并且返回误差的回调函数。 |
 | --- | --- |
 
 ```py
@@ -303,7 +303,7 @@ step(closure=None)
 
 执行一次张量更新操作。
 
-| Parameters: | **closure** (_callable__,_ _optional_) – 一个可以更新模型中张量大小并且返回误差的回调函数。 |
+| 参数: | **closure** (_callable__,_ _optional_) – 一个可以更新模型中张量大小并且返回误差的回调函数。 |
 | --- | --- |
 
 ```py
@@ -343,7 +343,7 @@ class torch.optim.RMSprop(params, lr=0.01, alpha=0.99, eps=1e-08, weight_decay=0
 ```
 实例化一个[Generating Sequences With Recurrent Neural Networks](https://arxiv.org/pdf/1308.0850v5.pdf)优化器。
 
-| Parameters: | 
+| 参数: | 
 
 *   **params** (_iterable_) – 一个可遍历的张量集合或者一个包含张量和优化参数的字典集合
 *   **lr** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – 学习速率（默认为1e-2）
@@ -362,7 +362,7 @@ step(closure=None)
 
 执行一次张量更新操作。
 
-| Parameters: | **closure** (_callable__,_ _optional_) – 一个可以更新模型中张量大小并且返回误差的回调函数。 |
+| 参数: | **closure** (_callable__,_ _optional_) – 一个可以更新模型中张量大小并且返回误差的回调函数。 |
 | --- | --- |
 
 ```py
@@ -370,7 +370,7 @@ class torch.optim.Rprop(params, lr=0.01, etas=(0.5, 1.2), step_sizes=(1e-06, 50)
 ```
 实现一个弹性传播优化器
 
-| Parameters: | 
+| 参数: | 
 
 *   **params** (_iterable_) – 一个可遍历的张量集合或者一个包含张量和优化参数的字典集合
 *   **lr** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – 学习速率（默认为1e-2）
@@ -386,7 +386,7 @@ step(closure=None)
 
 执行一次张量更新操作。
 
-| Parameters: | **closure** (_callable__,_ _optional_) – 一个可以更新模型中张量大小并且返回误差的回调函数。 |
+| 参数: | **closure** (_callable__,_ _optional_) – 一个可以更新模型中张量大小并且返回误差的回调函数。 |
 | --- | --- |
 
 ```py
@@ -396,7 +396,7 @@ class torch.optim.SGD(params, lr=<required parameter>, momentum=0, dampening=0, 
 实例化一个随机梯度下降[On the importance of initialization and momentum in deep learning](http://www.cs.toronto.edu/%7Ehinton/absps/momentum.pdf)优化器
 
 
-| Parameters: | 
+| 参数: | 
 
 *   **params** (_iterable_) – 一个可遍历的张量集合或者一个包含张量和优化参数的字典集合
 *   **lr** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")) – 学习速率
@@ -436,7 +436,7 @@ step(closure=None)
 
 命令优化器执行一次张量更新操作。
 
-| Parameters: | **closure** (_callable__,_ _optional_) – 一个可以更新模型中张量大小并且返回误差的回调函数。 |
+| 参数: | **closure** (_callable__,_ _optional_) – 一个可以更新模型中张量大小并且返回误差的回调函数。 |
 | --- | --- |
 
 ## 如何调整学习速率
@@ -447,7 +447,7 @@ step(closure=None)
 class torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda, last_epoch=-1)
 ```
 将优化器的学习速率设置为初始学习速率与给定函数的乘积，当参数`last_epoch`=-1时，将初始学习速率设置为当前学习速率。
-| Parameters: | 
+| 参数: | 
 
 *   **optimizer** ([_Optimizer_](#torch.optim.Optimizer "torch.optim.Optimizer")) – 被调整的优化器。
 *   **lr_lambda** (_function_ _or_ [_list_](https://docs.python.org/3/library/stdtypes.html#list "(in Python v3.7)")) – A function which computes a multiplicative factor given an integer parameter epoch, or a list of such functions, one for each group in optimizer.param_groups.
@@ -474,7 +474,6 @@ Example
 load_state_dict(state_dict)
 ```
 
-Loads the schedulers state.
 读取监视器的状态。
 
 | 参数: | **state_dict** ([_dict_](https://docs.python.org/3/library/stdtypes.html#dict "(in Python v3.7)")) – 监视器的状态。其返回值与直接调用方法 [`state_dict()`](#torch.optim.lr_scheduler.LambdaLR.state_dict "torch.optim.lr_scheduler.LambdaLR.state_dict")的返回值一样。 |
@@ -524,7 +523,7 @@ class torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones, gamma=0.1, las
 
 预先定义一个数组s，当训练周期数i等于s中任意一个元素时，令当前学习速率等于初始学习速率乘以gamma。当last_epoch=-1时，令初始学习速率等于当前学习速率。
 
-| Parameters: | 
+| 参数: | 
 
 *   **optimizer** ([_Optimizer_](#torch.optim.Optimizer "torch.optim.Optimizer")) – 被监视的优化器。
 *   **milestones** ([_list_](https://docs.python.org/3/library/stdtypes.html#list "(in Python v3.7)")) – 预定义的数组s，需要注意的是，s中的元素必须是有序且递增的。
@@ -555,7 +554,7 @@ class torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma, last_epoch=-1)
 
 Set the learning rate of each parameter group to the initial lr decayed by gamma every epoch. When last_epoch=-1, sets initial lr as lr.
 
-| Parameters: | 
+| 参数: | 
 
 *   **optimizer** ([_Optimizer_](#torch.optim.Optimizer "torch.optim.Optimizer")) – Wrapped optimizer.
 *   **gamma** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")) – Multiplicative factor of learning rate decay.
@@ -576,7 +575,7 @@ When last_epoch=-1, sets initial lr as lr.
 
 It has been proposed in [SGDR: Stochastic Gradient Descent with Warm Restarts](https://arxiv.org/abs/1608.03983). Note that this only implements the cosine annealing part of SGDR, and not the restarts.
 
-| Parameters: | 
+| 参数: | 
 
 *   **optimizer** ([_Optimizer_](#torch.optim.Optimizer "torch.optim.Optimizer")) – Wrapped optimizer.
 *   **T_max** ([_int_](https://docs.python.org/3/library/functions.html#int "(in Python v3.7)")) – Maximum number of iterations.
@@ -593,7 +592,7 @@ class torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0
 当优化器的损失函数无法进一步缩小时，降低学习速率。对于许多模型来说，一旦损失函数在学习了2-10个循环后仍无法降低，降低学习速率通常能改善该情况。该方法会观察优化器在学习过程中损失函数的大小，如果在经过了`patience`个循环后，损失依旧无法江都，该方法会降低学习速率。
 
 
-| Parameters: | 
+| 参数: | 
 
 *   **optimizer** ([_Optimizer_](#torch.optim.Optimizer "torch.optim.Optimizer")) – 被观察的优化器。
 *   **mode** ([_str_](https://docs.python.org/3/library/stdtypes.html#str "(in Python v3.7)")) – `min`或者 `max`，如果是`min`标识当损失无法继续减小时，降低学习速率。而`max`标识当损失无法继续增大时，改变学习速率。默认为 `min`。

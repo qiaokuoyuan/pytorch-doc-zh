@@ -475,35 +475,34 @@ load_state_dict(state_dict)
 ```
 
 Loads the schedulers state.
+读取监视器的状态。
 
-| Parameters: | **state_dict** ([_dict_](https://docs.python.org/3/library/stdtypes.html#dict "(in Python v3.7)")) – scheduler state. Should be an object returned from a call to [`state_dict()`](#torch.optim.lr_scheduler.LambdaLR.state_dict "torch.optim.lr_scheduler.LambdaLR.state_dict"). |
+| 参数: | **state_dict** ([_dict_](https://docs.python.org/3/library/stdtypes.html#dict "(in Python v3.7)")) – 监视器的状态。其返回值与直接调用方法 [`state_dict()`](#torch.optim.lr_scheduler.LambdaLR.state_dict "torch.optim.lr_scheduler.LambdaLR.state_dict")的返回值一样。 |
 | --- | --- |
 
 ```py
 state_dict()
 ```
 
-Returns the state of the scheduler as a [`dict`](https://docs.python.org/3/library/stdtypes.html#dict "(in Python v3.7)").
-
-It contains an entry for every variable in self.__dict__ which is not the optimizer. The learning rate lambda functions will only be saved if they are callable objects and not if they are functions or lambdas.
+返回当前监视器的状态，返回值为字典[`dict`](https://docs.python.org/3/library/stdtypes.html#dict "(in Python v3.7)")类型。这个返回值中包含了成员  self.__dict__ 中每一个张量，但不包含优化器本身。至于修改学习速率的lambda表达式是否保存在返回值中，取决于lambda表达式的类型。如果表达式是一个可回掉的对象，则其会包含在返回值中，否则不会被保存。
 
 ```py
 class torch.optim.lr_scheduler.StepLR(optimizer, step_size, gamma=0.1, last_epoch=-1)
 ```
 
-Sets the learning rate of each parameter group to the initial lr decayed by gamma every step_size epochs. When last_epoch=-1, sets initial lr as lr.
+在学习周期中每经过step_size次训练，将学习速率设置为初始学习速率与gamma的乘积。当last_epoch=-1时，令初始学习速率等于当前学习速率。
 
-| Parameters: | 
+| 参数: | 
 
-*   **optimizer** ([_Optimizer_](#torch.optim.Optimizer "torch.optim.Optimizer")) – Wrapped optimizer.
-*   **step_size** ([_int_](https://docs.python.org/3/library/functions.html#int "(in Python v3.7)")) – Period of learning rate decay.
-*   **gamma** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")) – Multiplicative factor of learning rate decay. Default: 0.1.
-*   **last_epoch** ([_int_](https://docs.python.org/3/library/functions.html#int "(in Python v3.7)")) – The index of last epoch. Default: -1.
+*   **optimizer** ([_Optimizer_](#torch.optim.Optimizer "torch.optim.Optimizer")) – 被监视的优化器。
+*   **step_size** ([_int_](https://docs.python.org/3/library/functions.html#int "(in Python v3.7)")) – 每经过多少次学习修改学习速率。
+*   **gamma** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")) – 每次修改学习速率时，学习速率乘以的因子。默认为0.1。
+*   **last_epoch** ([_int_](https://docs.python.org/3/library/functions.html#int "(in Python v3.7)")) – 表示最后一次循环的标识，默认为-1。
 
  |
 | --- | --- |
 
-Example
+例子
 
 ```py
 >>> # Assuming optimizer uses lr = 0.05 for all groups
@@ -523,19 +522,19 @@ Example
 class torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones, gamma=0.1, last_epoch=-1)
 ```
 
-Set the learning rate of each parameter group to the initial lr decayed by gamma once the number of epoch reaches one of the milestones. When last_epoch=-1, sets initial lr as lr.
+预先定义一个数组s，当训练周期数i等于s中任意一个元素时，令当前学习速率等于初始学习速率乘以gamma。当last_epoch=-1时，令初始学习速率等于当前学习速率。
 
 | Parameters: | 
 
-*   **optimizer** ([_Optimizer_](#torch.optim.Optimizer "torch.optim.Optimizer")) – Wrapped optimizer.
-*   **milestones** ([_list_](https://docs.python.org/3/library/stdtypes.html#list "(in Python v3.7)")) – List of epoch indices. Must be increasing.
-*   **gamma** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")) – Multiplicative factor of learning rate decay. Default: 0.1.
-*   **last_epoch** ([_int_](https://docs.python.org/3/library/functions.html#int "(in Python v3.7)")) – The index of last epoch. Default: -1.
+*   **optimizer** ([_Optimizer_](#torch.optim.Optimizer "torch.optim.Optimizer")) – 被监视的优化器。
+*   **milestones** ([_list_](https://docs.python.org/3/library/stdtypes.html#list "(in Python v3.7)")) – 预定义的数组s，需要注意的是，s中的元素必须是有序且递增的。
+*   **gamma** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")) – 修改学习速率时乘以的因子。默认为0.1。
+*   **last_epoch** ([_int_](https://docs.python.org/3/library/functions.html#int "(in Python v3.7)")) – 标识最后一个训练周期的标识。默认为-1。
 
  |
 | --- | --- |
 
-Example
+例子
 
 ```py
 >>> # Assuming optimizer uses lr = 0.05 for all groups

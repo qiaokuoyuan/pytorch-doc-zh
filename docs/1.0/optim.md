@@ -124,7 +124,7 @@ load_state_dict(state_dict)
 
 获取一个优化器当前的状态。
 
-| Parameters: | **state_dict** ([_dict_](https://docs.python.org/3/library/stdtypes.html#dict "(in Python v3.7)")) – 当前优化器的状态，其返回值与调用 [`state_dict()`](#torch.optim.Optimizer.state_dict "torch.optim.Optimizer.state_dict")一样。|
+| 参数: | **state_dict** ([_dict_](https://docs.python.org/3/library/stdtypes.html#dict "(in Python v3.7)")) – 当前优化器的状态，其返回值与调用 [`state_dict()`](#torch.optim.Optimizer.state_dict "torch.optim.Optimizer.state_dict")一样。|
 | --- | --- |
 
 ```py
@@ -184,7 +184,7 @@ class torch.optim.Adagrad(params, lr=0.01, lr_decay=0, weight_decay=0, initial_a
 ```
 实例化一个[Adaptive Subgradient Methods for Online Learning and Stochastic Optimization](http://jmlr.org/papers/v12/duchi11a.html)优化器。
 
-| Parameters: | 
+| 参数: | 
 
 *   **params** (_iterable_) – 一个可遍历的张量集合或者一个包含张量和优化参数的字典集合
 *   **lr** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – 学习速率（默认为1e-2）
@@ -240,8 +240,8 @@ class torch.optim.SparseAdam(params, lr=0.001, betas=(0.9, 0.999), eps=1e-08)
 
 *   **params** (_iterable_) – 一个可遍历的张量集合或者一个包含张量和优化参数的字典集合
 *   **lr** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – 学习速率（默认为1e-3）
-*   **betas** (_Tuple__[_[_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ [_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_]__,_ _optional_) – coefficients used for computing running averages of gradient and its square (default: (0.9, 0.999))
-*   **eps** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – term added to the denominator to improve numerical stability (default: 1e-8)
+*   **betas** (_Tuple__[_[_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ [_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_]__,_ _optional_) – 在运行中用于计算平均梯度和平方项的系数 (默认为(0.9, 0.999))
+*   **eps** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – 添加到分母上的稳定项，防止分母过小参数爆炸。(默认为 1e-8)
 
  |
 | --- | --- |
@@ -252,7 +252,7 @@ step(closure=None)
 
 执行一次参数更新操作。
 
-| Parameters: | **closure** (_callable__,_ _optional_) – 一个可以更新模型中张量大小并且返回误差的回调函数。 |
+| 参数: | **closure** (_callable__,_ _optional_) – 一个可以更新模型中张量大小并且返回误差的回调函数。 |
 | --- | --- |
 
 ```py
@@ -260,12 +260,12 @@ class torch.optim.Adamax(params, lr=0.002, betas=(0.9, 0.999), eps=1e-08, weight
 ```
 实例化一个 [Adam: A Method for Stochastic Optimization](https://arxiv.org/abs/1412.6980)优化器。
 
-| Parameters: | 
+| 参数: | 
 
 *   **params** (_iterable_) – 一个可遍历的张量集合或者一个包含张量和优化参数的字典集合
 *   **lr** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – 学习速率（默认为2e-3）
-*   **betas** (_Tuple__[_[_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ [_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_]__,_ _optional_) – coefficients used for computing running averages of gradient and its square
-*   **eps** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – term added to the denominator to improve numerical stability (default: 1e-8)
+*   **betas** (_Tuple__[_[_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ [_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_]__,_ _optional_) – 在运行中用于计算平均梯度和平方项的系数 
+*   **eps** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – 添加到分母上的稳定项，防止分母过小参数爆炸。(默认为 1e-8)
 *   **weight_decay** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – L2正则项（默认为0）
 
  |
@@ -283,15 +283,15 @@ step(closure=None)
 ```py
 class torch.optim.ASGD(params, lr=0.01, lambd=0.0001, alpha=0.75, t0=1000000.0, weight_decay=0)
 ```
-实例化一个[Acceleration of stochastic approximation by averaging](http://dl.acm.org/citation.cfm?id=131098)优化器
+实例化一个[Acceleration of stochastic approximation by averaging](http://dl.acm.org/citation.cfm?id=131098)优化器。该优化器在一个指定的时间点之前和普通的SGD一样，在这个时间点之后，使用这个时间点到当前时间的平均梯度。
  
-| Parameters: | 
+| 参数: | 
 
 *   **params** (_iterable_) – 一个可遍历的张量集合或者一个包含张量和优化参数的字典集合
 *   **lr** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – 学习速率（默认为1e-2）
-*   **lambd** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – decay term (default: 1e-4)
-*   **alpha** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – power for eta update (default: 0.75)
-*   **t0** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – point at which to start averaging (default: 1e6)
+*   **lambd** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – 学习速率衰减项 (默认为1e-4)
+*   **alpha** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – 更新 eta 的参数项。(默认为0.75)
+*   **t0** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – 开始计算平均梯度的时间点。(默认为1e6)
 *   **weight_decay** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – L2正则项（默认为0）
 
  |
@@ -317,7 +317,7 @@ class torch.optim.LBFGS(params, lr=1, max_iter=20, max_eval=None, tolerance_grad
 注意
 这种算法需要的内存空间较大（需要额外占用`param_bytes * (history_size + 1)` bytes内存）。如果您的内存大小无法满足要求，请调节参数`history_size`的大小或考虑使用其他算法。
 
-| Parameters: | 
+| 参数: | 
 
 *   **lr** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")) – 学习速率（默认为1）
 *   **max_iter** ([_int_](https://docs.python.org/3/library/functions.html#int "(in Python v3.7)")) – 每次权重更新时最大的迭代次数（默认为20）
@@ -374,8 +374,8 @@ class torch.optim.Rprop(params, lr=0.01, etas=(0.5, 1.2), step_sizes=(1e-06, 50)
 
 *   **params** (_iterable_) – 一个可遍历的张量集合或者一个包含张量和优化参数的字典集合
 *   **lr** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ _optional_) – 学习速率（默认为1e-2）
-*   **etas** (_Tuple__[_[_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ [_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_]__,_ _optional_) – pair of (etaminus, etaplis), that are multiplicative increase and decrease factors (default: (0.5, 1.2))
-*   **step_sizes** (_Tuple__[_[_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ [_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_]__,_ _optional_) – a pair of minimal and maximal allowed step sizes (default: (1e-6, 50))
+*   **etas** (_Tuple__[_[_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ [_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_]__,_ _optional_) – 由两个参数etaminus,etaplis构成的元组(etaminus,etaplis)，其被用作增益或者衰减项(默认为(0.5, 1.2))
+*   **step_sizes** (_Tuple__[_[_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_,_ [_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")_]__,_ _optional_) – 一个指定最小学习速率和最大学习速率的元组。默认为(1e-6, 50)
 
  |
 | --- | --- |
@@ -450,13 +450,13 @@ class torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda, last_epoch=-1)
 | 参数: | 
 
 *   **optimizer** ([_Optimizer_](#torch.optim.Optimizer "torch.optim.Optimizer")) – 被调整的优化器。
-*   **lr_lambda** (_function_ _or_ [_list_](https://docs.python.org/3/library/stdtypes.html#list "(in Python v3.7)")) – A function which computes a multiplicative factor given an integer parameter epoch, or a list of such functions, one for each group in optimizer.param_groups.
-*   **last_epoch** ([_int_](https://docs.python.org/3/library/functions.html#int "(in Python v3.7)")) – 上一次The index of last epoch. Default: -1.
+*   **lr_lambda** (_function_ _or_ [_list_](https://docs.python.org/3/library/stdtypes.html#list "(in Python v3.7)")) – 一个能基于循环次数算出学习速率衰减因子的函数。当被优化的张量是一个集合时，给定的函数也可以是一个集合
+*   **last_epoch** ([_int_](https://docs.python.org/3/library/functions.html#int "(in Python v3.7)")) – 当该值是-1时，标识是最后一个循环
 
  |
 | --- | --- |
 
-Example
+例子
 
 ```py
 >>> # Assuming optimizer has two groups.
@@ -552,13 +552,13 @@ class torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones, gamma=0.1, las
 class torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma, last_epoch=-1)
 ```
 
-Set the learning rate of each parameter group to the initial lr decayed by gamma every epoch. When last_epoch=-1, sets initial lr as lr.
+当参数last_epoch=-1时，令初始学习速率等于当前学习速率
 
 | 参数: | 
 
-*   **optimizer** ([_Optimizer_](#torch.optim.Optimizer "torch.optim.Optimizer")) – Wrapped optimizer.
-*   **gamma** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")) – Multiplicative factor of learning rate decay.
-*   **last_epoch** ([_int_](https://docs.python.org/3/library/functions.html#int "(in Python v3.7)")) – The index of last epoch. Default: -1.
+*   **optimizer** ([_Optimizer_](#torch.optim.Optimizer "torch.optim.Optimizer")) – 被观察的优化器
+*   **gamma** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")) – 学习速率衰减时乘以的因子
+*   **last_epoch** ([_int_](https://docs.python.org/3/library/functions.html#int "(in Python v3.7)")) – 当该参数为-1时，标识是最后一个循环。
 
  |
 | --- | --- |
@@ -577,10 +577,10 @@ It has been proposed in [SGDR: Stochastic Gradient Descent with Warm Restarts](h
 
 | 参数: | 
 
-*   **optimizer** ([_Optimizer_](#torch.optim.Optimizer "torch.optim.Optimizer")) – Wrapped optimizer.
-*   **T_max** ([_int_](https://docs.python.org/3/library/functions.html#int "(in Python v3.7)")) – Maximum number of iterations.
-*   **eta_min** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")) – Minimum learning rate. Default: 0.
-*   **last_epoch** ([_int_](https://docs.python.org/3/library/functions.html#int "(in Python v3.7)")) – The index of last epoch. Default: -1.
+*   **optimizer** ([_Optimizer_](#torch.optim.Optimizer "torch.optim.Optimizer")) – 被观察的优化器
+*   **T_max** ([_int_](https://docs.python.org/3/library/functions.html#int "(in Python v3.7)")) – 最大迭代次数
+*   **eta_min** ([_float_](https://docs.python.org/3/library/functions.html#float "(in Python v3.7)")) – 最小学习速率。默认为0
+*   **last_epoch** ([_int_](https://docs.python.org/3/library/functions.html#int "(in Python v3.7)")) – 标识最后一个训练周期的标识。默认为-1。
 
  |
 | --- | --- |
